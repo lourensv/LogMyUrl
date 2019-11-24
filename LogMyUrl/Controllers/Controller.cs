@@ -31,7 +31,6 @@ namespace LogMyUrl.Controllers
     ""headers"": {{{GetHeaders()}}},
 }}
 ");
-            Console.WriteLine("HI");
             return "k";
         }
 
