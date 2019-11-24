@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,7 @@ namespace LogMyUrl
             app.UseMvc();
 
             // Add file for logging
-            loggerFactory.AddFile("Logs/.txt");
+            loggerFactory.AddFile(Path.Combine(env.ContentRootPath,"Logs/request-{Date}.txt"));
         }
     }
 }
