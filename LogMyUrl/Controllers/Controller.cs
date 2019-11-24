@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LogMyUrl.Controllers
 {
@@ -17,43 +16,32 @@ namespace LogMyUrl.Controllers
         }
 
         [Route("{*.}")]
-        public string CatchAll()
+        public IActionResult CatchAll()
         {
             var request = HttpContext.Request;
 
-            _logger.LogInformation($@"{{
-    ""method"": ""{request.Method}"",
-    ""protocol"": ""{request.Protocol}"",
-    ""url"": ""{request.Host}{request.Path}{request.QueryString}"",
-    ""content-length"": ""{request.ContentLength}"",
-    ""content-type"": ""{request.ContentType}"",
-    ""body"": ""{GetBody()}"",
-    ""headers"": {{{GetHeaders()}}},
-}}
-");
-            return "k";
-        }
-
-        private string GetHeaders()
-        {
-            var headers = string.Empty;
-            foreach (var key in Request.Headers.Keys)
+            var details = new
             {
-                headers += "\t\t\"" + key + "\":\"" + Request.Headers[key] + "\"," + Environment.NewLine;
-            }
+                method = request.Method,
+                protocol = request.Protocol,
+                url = $"{request.Host}{request.Path}{request.QueryString}",
+                contentLength = request.ContentLength,
+                request.ContentType,
+                body = GetBody(),
+                headers = Request.Headers
+            };
 
-            return headers;
+            _logger.LogInformation(JsonConvert.SerializeObject(details));
+
+            return Ok();
         }
 
         private string GetBody()
         {
-            string body;
             using (var reader = new StreamReader(Request.Body))
             {
-                body = reader.ReadToEnd();
+                return reader.ReadToEnd();
             }
-
-            return body;
         }
     }
 }
