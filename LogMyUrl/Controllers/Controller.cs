@@ -28,7 +28,7 @@ namespace LogMyUrl.Controllers
     ""content-length"": ""{request.ContentLength}"",
     ""content-type"": ""{request.ContentType}"",
     ""body"": ""{GetBody()}"",
-    ""headers"": [{GetHeaders()}],
+    ""headers"": {{{GetHeaders()}}},
 }}
 ");
             Console.WriteLine("HI");
